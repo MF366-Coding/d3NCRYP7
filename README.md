@@ -13,4 +13,4 @@ A «checked» checkbox means that it worked.
 
 The number is how many tries I needed.
 
-[X] Test 1 - Switching A and Z - (5)
+- [X] Test 1 - Switching A and Z - (5)

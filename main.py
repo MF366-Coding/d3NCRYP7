@@ -121,8 +121,8 @@ class Tests:
         "S", "T", "U", "V", "W", "X", "Y", "a", "1",
         "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
-    c = r'C:\Users\mateu\Coding\Python\d3NCRYP7\tests\test-001.txt'
-    d = r'C:\Users\mateu\Coding\Python\d3NCRYP7\tests\output-001.txt'
+    c = 'C:\Users\some_name\Coding\Python\d3NCRYP7\tests\test-001.txt'
+    d = 'Good, everybody knows my name now'
 
     bob = Encryption(replacements=b, file_source=c, file_encrypted=d)
     bob2 = MainMenu(properties=a)

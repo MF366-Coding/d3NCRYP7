@@ -9,7 +9,7 @@ Expect a full how-to-use guide as soon as I finish this script
 More coming soon!
 
 ### Tests
-A «checked» checkbox means that it worked.
+A ticked checkbox means that it worked.
 
 The number is how many tries I needed.
 

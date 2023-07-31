@@ -13,4 +13,7 @@ A ticked checkbox means that it worked.
 
 The number is how many tries I needed.
 
-- [X] Test 1 - Switching A and Z - (5)
+- [X] Test 1 - Swapping A and Z - (5)
+- [X] Test 2 - Swapping A and Z with new interface - (1)
+- [X] Test 3 - With a different filetype; qwerty mode - (2)
+- [ ] Test 4 - All the letters of the alphabet; C file; New rulesets for upper and lowercase - (X)

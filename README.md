@@ -17,4 +17,4 @@ The number is how many tries I needed.
 - [X] Test 2 - Swapping A and Z with new interface - (1)
 - [X] Test 3 - With a different filetype; qwerty mode - (2)
 - [ ] Test 4 - All the letters of the alphabet; C file; New rulesets for upper and lowercase - (X)
-- [ ] Test 4.1 - All the letters in the alphabet; C file; New rulesets for upper and lowercase using a custom/default key - (1)
+- [X] Test 4.1 - All the letters in the alphabet; C file; New rulesets for upper and lowercase using a custom/default key - (1)

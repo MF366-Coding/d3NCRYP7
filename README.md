@@ -6,7 +6,7 @@ Not the best encryption/decryption system but one that is already pretty good fo
 ## Still in development
 Expect a full how-to-use guide as soon as I finish this script
 
-More coming soon!
+UI coming soon!
 
 ### Tests
 A ticked checkbox means that it worked.
@@ -17,3 +17,4 @@ The number is how many tries I needed.
 - [X] Test 2 - Swapping A and Z with new interface - (1)
 - [X] Test 3 - With a different filetype; qwerty mode - (2)
 - [ ] Test 4 - All the letters of the alphabet; C file; New rulesets for upper and lowercase - (X)
+- [ ] Test 4.1 - All the letters in the alphabet; C file; New rulesets for upper and lowercase using a custom/default key - (1)

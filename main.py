@@ -4,9 +4,19 @@
 Encrypt, decrypt and invert files in lots of ways.
 """
 
-from colorama import Fore # Used for colored text and menus
+from colorama import Fore, Back, Style # Used for colored text
 import os
+from simple_webbrowser.simple_webbrowser import Website
 import sys
+
+qwerty_mode = [
+    "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G",
+    "H", "J", "K", "L", "Z", "X", "C", "V", "B", "N", "M",
+    # ------------------------------------------------------------------------
+    "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g",
+    "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m"]
+
+DEFAULT_KEY = "_-|]>/=!^%#*:.'\";+@<[?()&,`$*&<($|>^]!\\?_%)+@[(/.~[:;~][!&<|/)=^>~%+_`;:\"](@?,.$*'/#;(|@?&],!_>~[%+\"#$%#/(=%&/&$/%$&#$&%)=&%&&/%$=?(?=?»(«>>>><<<<--,.,_;_º+º+~ª*ª;_;_))"
 
 e = (ValueError, TypeError, NameError)
 
@@ -16,113 +26,220 @@ UNIX_OS = [
 ]
 
 def clear():
+    """
+    clear clears the screen
+
+    Either uses cls or clear, based on your OS
+    """
     if sys.platform == "win32":
         os.system("cls")
     elif sys.platform in UNIX_OS:
         os.system("clear")
 
 def newline():
+    """
+    newline simply prints a break line
+    """
     print("\n")
 
-class Encryption:
-    def __init__(self, replacements: list, file_source: str, file_encrypted: str):
-        """
-        __init__ initializes Encryption
+clear()
 
-        Encryption is the general encryption system for this piece of software
-        
-        Args:
-            replacements (list): List of chars that will replace the old ones
-            file_source (str): The path to the file that will be encrypted
-            file_encrypted (str): The path to where d3NCRYP7 will save the encrypted version of your file
+class CryptFile:
+    def __init__(self, file_source: str, _encoding: str = "utf-8", key: str = DEFAULT_KEY):
         """
-        self.replacements = replacements
-        self.file_source = file_source
-        if file_encrypted == "":
-            self.file_encrypted = file_source
-        else:
-            self.file_encrypted = file_encrypted
-    
-    def encrypt(self):
-        # 1. Opening the source
-        f = open(self.file_source, "r", encoding="utf-8")
-        _f = f.read()
-        _txt = _f.upper()
-        
-        # 2. Encrypting the data
-        replaced_chars = ["A", "B", "C", "D", "E", "F", "G", "H", "I",
-                          "J", "K", "L", "M", "N", "O", "P", "Q", "R", 
-                          "S", "T", "U", "V", "W", "X", "Y", "Z", "1",
-                          "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-        
-        A_text = _txt.replace("A", "z")
-        Z_text = A_text.replace("Z", "a")
-        
-        # 3. Output to a file
-        print(A_text)
-        print(f"{Fore.RED}{Z_text}{Fore.RESET}")
-        f.close()
-        f = open(self.file_encrypted, "w", encoding="utf-8")
-        f.write(str(Z_text))
-        f.close()
-        
+        __init__ _summary_
 
-class MainMenu:
-    def __init__(self, properties: dict):
-        """
-        __init__ initializes MainMenu class
+        _extended_summary_
 
         Args:
-            properties (dict): The properties for the MainMenu
+            file_source (str): the file to encrypt/decrypt
+            _encoding (str, optional): the encoding of the file. Defaults to "utf-8".
+            key (str, optional): the key for encryption/decryption. Defaults to DEFAULT_KEY.
         """
-        self.titles = properties["titles"]
-        self.desc = properties["descriptions"]
-        self.fg = properties["foreground_colors"]
-        self.commands = properties["commands"]
-        self.header = properties["header"]
-    
-    def pack(self):
-        """
-        pack packs the menu on the commandline
-        """
-        clear()
-        print(f"{Fore.RESET}{str(self.header)}")
-        print("="*len(str(self.header)))
-        newline()
-        x = 0
-        for i in self.titles:
-            print(f"{self.fg[x]}{str(x+1)}. {self.titles[x]}\n\t{self.desc[x]}{Fore.RESET}")
-            x += 1
-            newline()
-        print("-"*len(str(self.header)))
-        print("<- d3NCRYP7 by MF366 ->")
-        print("-"*len(str(self.header)))
-        newline()
+        
         try:
-            y_command = int(input("Insert the command number: "))
-        except e:
-            try:
-                y_command = int(input("Please insert a correct command: "))
-            except e:
-                y_command = int(input("Last chance before an exception is raised - Please insert a correct command: "))  
+            self.file_source = file_source
+            self.encoding = _encoding
+            self.key = key
+            
+        except Exception:
+            clear()
+            print(f"{Back.RED}An unknown error was raised.{Back.RESET}")
+            quit()
 
-class Tests:
-    # Check the tests dir at GitHub         
-    a = {
-        "titles": ["Hello!", "World!", "This is Python"],
-        "descriptions": ["random stuff", ":)", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaamazzzzing!!!!"],
-        "foreground_colors": [Fore.GREEN, Fore.RED, Fore.RESET],
-        "commands": [newline, clear],
-        "header": "By MF366: Test # 1"
-    }
+    def encrypt(self, replacements: list):
+        """
+        encrypt encrypts the file at CryptFile
+        """
 
-    b = ["a", "B", "C", "D", "E", "F", "G", "H", "I",
-        "J", "K", "L", "M", "N", "O", "P", "Q", "R", 
-        "S", "T", "U", "V", "W", "X", "Y", "a", "1",
-        "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        try:
+            # 1. Opening the source
+            f = open(self.file_source, "r", encoding=self.encoding)
+            _txt = f.read()
 
-    c = 'C:\Users\some_name\Coding\Python\d3NCRYP7\tests\test-001.txt'
-    d = 'Good, everybody knows my name now'
+            # 2. Encrypting the data
+            replaced_chars = ["A", "B", "C", "D", "E", "F", "G", "H", "I",
+                            "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+                            "S", "T", "U", "V", "W", "X", "Y", "Z",
+                            # -----------------------------------------
+                            "a", "b", "c", "d", "e", "f", "g", "h", "i",
+                            "j", "k", "l", "m", "n", "o", "p", "q", "r",
+                            "s", "t", "u", "v", "w", "x", "y", "z"]
 
-    bob = Encryption(replacements=b, file_source=c, file_encrypted=d)
-    bob2 = MainMenu(properties=a)
+            x = 0
+
+            for i in replaced_chars:
+                _txt = _txt.replace(replaced_chars[x], f"{replaced_chars[x]}{self.key}")
+                x += 1
+
+            x = 0
+
+            for i in replaced_chars:
+                _txt = _txt.replace(f"{replaced_chars[x]}{self.key}", replacements[x])
+                x += 1
+
+            x = 0
+
+            # 3. Output to a file
+            f.close()
+            f = open(f"{self.file_source}.d3NCRYP7.encrypted", "w", encoding=self.encoding)
+            f.write(str(_txt))
+            f.close()
+
+        except (UnicodeDecodeError, UnicodeEncodeError, UnicodeError, UnicodeTranslateError):
+            clear()
+            print(f"{Back.RED}An encoding error was found while attempting to read the file at {self.file_source}.{Back.RESET}")
+            quit()
+
+        except FileNotFoundError:
+            clear()
+            print(f"{Back.RED}The path {self.file_source} is invalid - File Not Found.{Back.RESET}")
+            quit()
+
+        except PermissionError:
+            clear()
+            print(f"{Back.RED}Missing permissions for {self.file_source}.{Back.RESET}")
+            quit()
+
+        except Exception:
+            clear()
+            print(f"{Back.RED}An unknown error was raised.{Back.RESET}")
+            quit()
+
+    def decrypt(self, replaced_chars: list):
+        """
+        decrypt decrypts the file at CryptFile
+        """
+
+        try:
+            # 1. Opening the source
+            f = open(self.file_source, "r", encoding=self.encoding)
+            _txt = f.read()
+
+            # 2. Encrypting the data
+            replacements = ["A", "B", "C", "D", "E", "F", "G", "H", "I",
+                            "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+                            "S", "T", "U", "V", "W", "X", "Y", "Z",
+                            # -----------------------------------------
+                            "a", "b", "c", "d", "e", "f", "g", "h", "i",
+                            "j", "k", "l", "m", "n", "o", "p", "q", "r",
+                            "s", "t", "u", "v", "w", "x", "y", "z"]
+
+            x = 0
+
+            for i in replaced_chars:
+                _txt = _txt.replace(replaced_chars[x], f"{replaced_chars[x]}{self.key}")
+                x += 1
+
+            x = 0
+
+            for i in replaced_chars:
+                _txt = _txt.replace(f"{replaced_chars[x]}{self.key}", replacements[x])
+                x += 1
+
+            x = 0
+
+            # 3. Output to a file
+            f.close()
+            f = open(f"{self.file_source}.d3NCRYP7.decrypted", "w", encoding=self.encoding)
+            f.write(str(_txt))
+            f.close()
+
+        except (UnicodeDecodeError, UnicodeEncodeError, UnicodeError, UnicodeTranslateError):
+            clear()
+            print(f"{Back.RED}An encoding error was found while attempting to read the file at {self.file_source}.{Back.RESET}")
+            quit()
+
+        except FileNotFoundError:
+            clear()
+            print(f"{Back.RED}The path {self.file_source} is invalid - File Not Found.{Back.RESET}")
+            quit()
+
+        except PermissionError:
+            clear()
+            print(f"{Back.RED}Missing permissions for {self.file_source}.{Back.RESET}")
+            quit()
+            
+        except Exception:
+            clear()
+            print(f"{Back.RED}An unknown error was raised.{Back.RESET}")
+            quit()
+
+
+def github_repo():
+    Website("https://github.com/MF366-Coding/d3NCRYP7")
+
+def send_help():
+    clear()
+    print(f"{Back.YELLOW}{Style.BRIGHT}Welcome to d3NCRYP7!{Style.RESET_ALL}{Back.RESET}")
+
+
+def start(decrypt: bool):
+    """
+    start starts the encryption/decryption UI
+
+    If decrypt is True, decryption UI will be used.
+    
+    Else, encryption UI will be used.
+
+    Args:
+        decrypt (bool): decides what operation will run.
+    """
+
+    if decrypt == False:
+        raise NotImplementedError
+        
+    elif decrypt == True:
+        raise NotImplementedError
+
+commands = {
+    "help": send_help,
+    "github": github_repo,
+}
+
+'''
+if __name__ == "__main__":
+    try:
+        clear()
+        print(f"{Back.YELLOW}{Style.BRIGHT}Welcome to d3NCRYP7!{Style.RESET_ALL}{Back.RESET}")
+        y = input(f"{Fore.CYAN}Please insert a command here: {Fore.RESET}{Fore.YELLOW}")
+        newline()
+        print(Fore.RESET)
+        
+        if str(y.lower()) in commands.keys():
+            commands[str(y).lower()]()
+            
+        else:
+            if y.lower() == "encrypt":
+                start(decrypt=False)
+            elif y.lower() == "decrypt":
+                start(decrypt=True)
+        
+    except Exception:
+        pass
+'''
+
+bob = CryptFile(r"C:\Users\mateu\Coding\Python\d3NCRYP7\tests\test004-again\original.c")
+bob.encrypt(qwerty_mode)
+bob = CryptFile(r"C:\Users\mateu\Coding\Python\d3NCRYP7\tests\test004-again\original.c.d3NCRYP7.encrypted")
+bob.decrypt(qwerty_mode)

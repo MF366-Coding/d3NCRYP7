@@ -217,7 +217,7 @@ commands = {
     "github": github_repo,
 }
 
-'''
+
 if __name__ == "__main__":
     try:
         clear()
@@ -237,9 +237,3 @@ if __name__ == "__main__":
         
     except Exception:
         pass
-'''
-
-bob = CryptFile(r"C:\Users\mateu\Coding\Python\d3NCRYP7\tests\test004-again\original.c")
-bob.encrypt(qwerty_mode)
-bob = CryptFile(r"C:\Users\mateu\Coding\Python\d3NCRYP7\tests\test004-again\original.c.d3NCRYP7.encrypted")
-bob.decrypt(qwerty_mode)

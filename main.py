@@ -8,6 +8,9 @@ from colorama import Fore, Back, Style # Used for colored text
 import os
 from simple_webbrowser.simple_webbrowser import Website
 import sys
+import customtkinter as ctk
+
+ICON = os.path.abspath("logo.ico")
 
 qwerty_mode = [
     "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G",
@@ -189,51 +192,54 @@ class CryptFile:
 def github_repo():
     Website("https://github.com/MF366-Coding/d3NCRYP7")
 
-def send_help():
-    clear()
-    print(f"{Back.YELLOW}{Style.BRIGHT}Welcome to d3NCRYP7!{Style.RESET_ALL}{Back.RESET}")
+def encrypt_ui() -> None:
+    pass
 
-
-def start(decrypt: bool):
+def decrypt_ui() -> None:
+    pass
+    
+def start() -> None:
     """
     start starts the encryption/decryption UI
-
-    If decrypt is True, decryption UI will be used.
-    
-    Else, encryption UI will be used.
-
-    Args:
-        decrypt (bool): decides what operation will run.
     """
 
-    if decrypt == False:
-        raise NotImplementedError
-        
-    elif decrypt == True:
-        raise NotImplementedError
-
-commands = {
-    "help": send_help,
-    "github": github_repo,
-}
-
+    ROOT = ctk.CTk()
+    ROOT.title("d3NCRYP7 - Encrypt and Decrypt Files")
+    ROOT.geometry("325x150")
+    ROOT.resizable(False, False)
+    if sys.platform == "win32":
+        ROOT.iconbitmap(ICON)
+    
+    frame_1 = ctk.CTkFrame(ROOT)
+    
+    label_1 = ctk.CTkLabel(ROOT, text_color="yellow", font=("JetBrains Mono Bold", 16), text="Welcome to d3NCRYP7 by MF366!")
+    label_2 = ctk.CTkLabel(ROOT, text="", font=("JetBrains Mono", 10))
+    
+    butt_1 = ctk.CTkButton(frame_1, corner_radius=6, fg_color="#49C4E0", text_color="black", font=("JetBrains Mono", 13), text="Encrypt", command=encrypt_ui)
+    butt_2 = ctk.CTkButton(frame_1, corner_radius=6, fg_color="#8A8ADA", text_color="black", font=("JetBrains Mono", 13), text="Decrypt", command=decrypt_ui)
+    butt_3 = ctk.CTkButton(ROOT, corner_radius=6, fg_color="#DDE8EA", text_color="black", font=("JetBrains Mono", 12), text="At GitHub", command=github_repo)
+    
+    label_clone_1 = label_2
+    
+    # in progress
+    
+    label_1.pack()
+    label_2.pack()
+    frame_1.pack()
+    butt_1.pack()
+    butt_2.pack()
+    butt_3.pack()
+    
+    ROOT.mainloop()
 
 if __name__ == "__main__":
     try:
         clear()
         print(f"{Back.YELLOW}{Style.BRIGHT}Welcome to d3NCRYP7!{Style.RESET_ALL}{Back.RESET}")
-        y = input(f"{Fore.CYAN}Please insert a command here: {Fore.RESET}{Fore.YELLOW}")
+        print(f"{Fore.CYAN}By: MF366{Fore.RESET}")
         newline()
-        print(Fore.RESET)
         
-        if str(y.lower()) in commands.keys():
-            commands[str(y).lower()]()
-            
-        else:
-            if y.lower() == "encrypt":
-                start(decrypt=False)
-            elif y.lower() == "decrypt":
-                start(decrypt=True)
+        start()
         
     except Exception:
         pass

@@ -30,4 +30,4 @@ The number is how many tries I needed.
 - [ ] Test 4 - All the letters of the alphabet; C file; New rulesets for upper and lowercase - (X)
 - [X] Test 4.1 - All the letters in the alphabet; C file; New rulesets for upper and lowercase using a custom/default key - (1)
 - [X] Test 4.2 - Simple UI test - (N/A)
-- [X] Test 4.3 - Simple UI test with different arguments - (N/A)
+- [X] Test 4.3 - Using another encryption/decryption mode; Simple UI test with different arguments - (N/A)

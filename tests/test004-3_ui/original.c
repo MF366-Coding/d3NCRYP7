@@ -1,7 +1,7 @@
-// Gaqn, ziol ol q egddtfz!
+// Tpfd, ymnx nx f htrrjsy!
 
-// QWERTYUIOPASDFGHJKLZXCVBNM
-// qwertyuiopasdfghjklzxcvbnm
-// Tfpgn!
+// FGHIJKLMNOPQRSTUVWXYZABCDE
+// fghijklmnopqrstuvwxyzabcde
+// Jsotd!
 
-// wzv ora e :)
+// gyb nip h :)

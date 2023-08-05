@@ -6,9 +6,9 @@ Encrypt, decrypt and invert files in lots of ways.
 
 from colorama import Fore, Back, Style # Used for colored text
 import os
+import argparse
 from simple_webbrowser.simple_webbrowser import Website
 import sys
-import customtkinter as ctk
 
 ICON = os.path.abspath("logo.ico")
 
@@ -18,6 +18,13 @@ qwerty_mode = [
     # ------------------------------------------------------------------------
     "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g",
     "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m"]
+
+start_on_f = [
+    "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+    "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E",
+    # ------------------------------------------------------------------------
+    "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+    "u", "v", "w", "x", "y", "z", "a", "b", "c", "d", "e"]
 
 DEFAULT_KEY = "_-|]>/=!^%#*:.'\";+@<[?()&,`$*&<($|>^]!\\?_%)+@[(/.~[:;~][!&<|/)=^>~%+_`;:\"](@?,.$*'/#;(|@?&],!_>~[%+\"#$%#/(=%&/&$/%$&#$&%)=&%&&/%$=?(?=?»(«>>>><<<<--,.,_;_º+º+~ª*ª;_;_))"
 
@@ -48,7 +55,7 @@ def newline():
 clear()
 
 class CryptFile:
-    def __init__(self, file_source: str, _encoding: str = "utf-8", key: str = DEFAULT_KEY):
+    def __init__(self, file_source: str, new_file: str, _encoding: str = "utf-8", key: str = DEFAULT_KEY):
         """
         __init__ _summary_
 
@@ -64,6 +71,7 @@ class CryptFile:
             self.file_source = file_source
             self.encoding = _encoding
             self.key = key
+            self.new_file = new_file
             
         except Exception:
             clear()
@@ -105,7 +113,7 @@ class CryptFile:
 
             # 3. Output to a file
             f.close()
-            f = open(f"{self.file_source}.d3NCRYP7.encrypted", "w", encoding=self.encoding)
+            f = open(self.new_file, "w", encoding=self.encoding)
             f.write(str(_txt))
             f.close()
 
@@ -164,7 +172,7 @@ class CryptFile:
 
             # 3. Output to a file
             f.close()
-            f = open(f"{self.file_source}.d3NCRYP7.decrypted", "w", encoding=self.encoding)
+            f = open(self.new_file, "w", encoding=self.encoding)
             f.write(str(_txt))
             f.close()
 
@@ -192,54 +200,76 @@ class CryptFile:
 def github_repo():
     Website("https://github.com/MF366-Coding/d3NCRYP7")
 
-def encrypt_ui() -> None:
-    pass
 
-def decrypt_ui() -> None:
-    pass
-    
-def start() -> None:
+def start(_file, process, _new, _enc, _key, _mode, _github):
     """
     start starts the encryption/decryption UI
     """
-
-    ROOT = ctk.CTk()
-    ROOT.title("d3NCRYP7 - Encrypt and Decrypt Files")
-    ROOT.geometry("325x150")
-    ROOT.resizable(False, False)
-    if sys.platform == "win32":
-        ROOT.iconbitmap(ICON)
     
-    frame_1 = ctk.CTkFrame(ROOT)
+    qwerty_modes = [
+        "qwerty_mode",
+        "qwerty", 
+        "mode_qwerty"
+    ]
     
-    label_1 = ctk.CTkLabel(ROOT, text_color="yellow", font=("JetBrains Mono Bold", 16), text="Welcome to d3NCRYP7 by MF366!")
-    label_2 = ctk.CTkLabel(ROOT, text="", font=("JetBrains Mono", 10))
+    start_on_f_modes = [
+        "f_start",
+        "f_starts",
+        "start_f",
+        "starts_f"
+    ]
     
-    butt_1 = ctk.CTkButton(frame_1, corner_radius=6, fg_color="#49C4E0", text_color="black", font=("JetBrains Mono", 13), text="Encrypt", command=encrypt_ui)
-    butt_2 = ctk.CTkButton(frame_1, corner_radius=6, fg_color="#8A8ADA", text_color="black", font=("JetBrains Mono", 13), text="Decrypt", command=decrypt_ui)
-    butt_3 = ctk.CTkButton(ROOT, corner_radius=6, fg_color="#DDE8EA", text_color="black", font=("JetBrains Mono", 12), text="At GitHub", command=github_repo)
-    
-    label_clone_1 = label_2
-    
-    # in progress
-    
-    label_1.pack()
-    label_2.pack()
-    frame_1.pack()
-    butt_1.pack()
-    butt_2.pack()
-    butt_3.pack()
-    
-    ROOT.mainloop()
-
-if __name__ == "__main__":
     try:
-        clear()
-        print(f"{Back.YELLOW}{Style.BRIGHT}Welcome to d3NCRYP7!{Style.RESET_ALL}{Back.RESET}")
-        print(f"{Fore.CYAN}By: MF366{Fore.RESET}")
-        newline()
+        if _new == None:
+            _new = _file
+            
+        if _enc == None:
+            _enc = "utf-8"
         
-        start()
+        if _key == None:
+            _key = DEFAULT_KEY
+            
+        if _mode == None:
+            _mode = qwerty_mode
         
+        elif _mode.lower() in qwerty_modes:
+            _mode = qwerty_mode
+            
+        elif _mode.lower() in start_on_f_modes:
+            _mode = start_on_f
+        
+        f = CryptFile(file_source=_file, new_file=_new, _encoding=_enc, key=_key)
+        
+        if process == True:
+            f.encrypt(_mode)
+        
+        elif process == False:
+            f.decrypt(_mode)
+            
+        if _github == True:
+            github_repo()
+            
     except Exception:
-        pass
+        clear()
+        print(f"{Back.RED}An unknown error was raised.{Back.RESET}")
+        quit()
+        
+    
+parser = argparse.ArgumentParser(description="d3NCRYP7")
+
+parser.add_argument("filepath", type=str, help="The filepath of the file you'd like to encrypt/decrypt.")
+parser.add_argument("-e", "--encrypt", action="store_true", help="If used, this flag will change the process from decryption to encryption.")
+parser.add_argument("--new_filename", "-nf", type=str, help="The name of the new file that will result from the encryption/decryption. If not specified, the process will overwrite the existing file.")
+parser.add_argument("--encoding", type=str, help="The encoding used to decode the files. If not specified, the encoding will be utf-8 for its large support for many characters.")
+parser.add_argument("--key", "-k", type=str, help="The encryption/decryption key used. If not specified, the regular and recommended one will be used.")
+parser.add_argument("--mode", "-m", type=str, help="Encryption/decryption mode. See GitHub for all modes available. If not specified, the most basic mode (QWERTY Mode) will be used.")
+parser.add_argument("--github", action="store_true", help="If specified, the program will take you to its GitHub repo.")
+
+args = parser.parse_args()
+
+clear()
+print(f"{Back.YELLOW}{Style.BRIGHT}Welcome to d3NCRYP7!{Style.RESET_ALL}{Back.RESET}")
+print(f"{Fore.CYAN}By: MF366{Fore.RESET}")
+newline()
+
+start(args.filepath, args.encrypt, args.new_filename, args.encoding, args.key, args.mode, args.github)

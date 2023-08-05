@@ -53,6 +53,9 @@ def newline():
     print("\n")
 
 clear()
+print(f"{Back.YELLOW}{Style.BRIGHT}Welcome to d3NCRYP7 and thanks for using it!{Style.RESET_ALL}{Back.RESET}{Fore.YELLOW} :){Fore.RESET}")
+print(f"{Fore.CYAN}Made by MF366 with {Fore.RED}love <3{Fore.CYAN}!{Fore.RESET}")
+newline()
 
 class CryptFile:
     def __init__(self, file_source: str, new_file: str, _encoding: str = "utf-8", key: str = DEFAULT_KEY):
@@ -266,10 +269,5 @@ parser.add_argument("--mode", "-m", type=str, help="Encryption/decryption mode. 
 parser.add_argument("--github", action="store_true", help="If specified, the program will take you to its GitHub repo.")
 
 args = parser.parse_args()
-
-clear()
-print(f"{Back.YELLOW}{Style.BRIGHT}Welcome to d3NCRYP7!{Style.RESET_ALL}{Back.RESET}")
-print(f"{Fore.CYAN}By: MF366{Fore.RESET}")
-newline()
 
 start(args.filepath, args.encrypt, args.new_filename, args.encoding, args.key, args.mode, args.github)

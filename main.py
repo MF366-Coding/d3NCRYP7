@@ -6,25 +6,38 @@ Encrypt, decrypt and invert files in lots of ways.
 
 from colorama import Fore, Back, Style # Used for colored text
 import os
+import json
+import requests
 import argparse
 from simple_webbrowser.simple_webbrowser import Website
 import sys
 
-ICON = os.path.abspath("logo.ico")
+script_path = os.path.abspath(__file__)
+script_dir = os.path.dirname(script_path)
+script_name = os.path.basename(script_path)
+
+VERSION = "1.0.0"
+
+LOGO_PNG = os.path.join(script_dir, "assets/logo.png")
+ICON = os.path.join(script_dir, "assets/logo.ico")
 
 qwerty_mode = [
     "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G",
     "H", "J", "K", "L", "Z", "X", "C", "V", "B", "N", "M",
     # ------------------------------------------------------------------------
     "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g",
-    "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m"]
+    "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m",
+    # ------------------------------------------------------------------------
+    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
 start_on_f = [
     "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
     "U", "V", "W", "X", "Y", "Z", "A", "B", "C", "D", "E",
     # ------------------------------------------------------------------------
     "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
-    "u", "v", "w", "x", "y", "z", "a", "b", "c", "d", "e"]
+    "u", "v", "w", "x", "y", "z", "a", "b", "c", "d", "e",
+    # ------------------------------------------------------------------------
+    "6", "7", "8", "9", "0", "1", "2", "3", "4", "5"]
 
 DEFAULT_KEY = "_-|]>/=!^%#*:.'\";+@<[?()&,`$*&<($|>^]!\\?_%)+@[(/.~[:;~][!&<|/)=^>~%+_`;:\"](@?,.$*'/#;(|@?&],!_>~[%+\"#$%#/(=%&/&$/%$&#$&%)=&%&&/%$=?(?=?»(«>>>><<<<--,.,_;_º+º+~ª*ª;_;_))"
 
@@ -58,7 +71,7 @@ print(f"{Fore.CYAN}Made by MF366 with {Fore.RED}love <3{Fore.CYAN}!{Fore.RESET}"
 newline()
 
 class CryptFile:
-    def __init__(self, file_source: str, new_file: str, _encoding: str = "utf-8", key: str = DEFAULT_KEY):
+    def __init__(self, file_source: str, new_file: str, _encoding: str = "utf-8", key: str = DEFAULT_KEY, verbose: bool = False):
         """
         __init__ _summary_
 
@@ -75,6 +88,7 @@ class CryptFile:
             self.encoding = _encoding
             self.key = key
             self.new_file = new_file
+            self.verbose = verbose
             
         except Exception:
             clear()
@@ -90,6 +104,10 @@ class CryptFile:
             # 1. Opening the source
             f = open(self.file_source, "r", encoding=self.encoding)
             _txt = f.read()
+            
+            if self.verbose:
+                print(Fore.CYAN)
+                print(f"\n[i] Opened the file at '{self.file_source}' and stored its contents locally.")
 
             # 2. Encrypting the data
             replaced_chars = ["A", "B", "C", "D", "E", "F", "G", "H", "I",
@@ -98,19 +116,28 @@ class CryptFile:
                             # -----------------------------------------
                             "a", "b", "c", "d", "e", "f", "g", "h", "i",
                             "j", "k", "l", "m", "n", "o", "p", "q", "r",
-                            "s", "t", "u", "v", "w", "x", "y", "z"]
+                            "s", "t", "u", "v", "w", "x", "y", "z",
+                            # -----------------------------------------
+                            "0", "1", "2", "3", "4", "5", "6", "7", "8",
+                            "9"]
 
             x = 0
 
             for i in replaced_chars:
                 _txt = _txt.replace(replaced_chars[x], f"{replaced_chars[x]}{self.key}")
                 x += 1
+                
+            if self.verbose:
+                print("[i] Started using the key replacement on the locally stored data.")
 
             x = 0
 
             for i in replaced_chars:
                 _txt = _txt.replace(f"{replaced_chars[x]}{self.key}", replacements[x])
                 x += 1
+                
+            if self.verbose:
+                print("[i] Started actually swapping the characters.")
 
             x = 0
 
@@ -118,7 +145,13 @@ class CryptFile:
             f.close()
             f = open(self.new_file, "w", encoding=self.encoding)
             f.write(str(_txt))
+            
+            if self.verbose:
+                print(f"[i] Stored the data at {self.new_file}.{Fore.RESET}")
+                
             f.close()
+            
+            print(f"{Fore.BLUE}[i] Done.\n{Fore.RESET}")
 
         except (UnicodeDecodeError, UnicodeEncodeError, UnicodeError, UnicodeTranslateError):
             clear()
@@ -150,6 +183,10 @@ class CryptFile:
             f = open(self.file_source, "r", encoding=self.encoding)
             _txt = f.read()
 
+            if self.verbose:
+                print(Fore.CYAN)
+                print(f"\n[i] Opened the file at '{self.file_source}' and stored its contents locally.")
+
             # 2. Encrypting the data
             replacements = ["A", "B", "C", "D", "E", "F", "G", "H", "I",
                             "J", "K", "L", "M", "N", "O", "P", "Q", "R",
@@ -157,7 +194,10 @@ class CryptFile:
                             # -----------------------------------------
                             "a", "b", "c", "d", "e", "f", "g", "h", "i",
                             "j", "k", "l", "m", "n", "o", "p", "q", "r",
-                            "s", "t", "u", "v", "w", "x", "y", "z"]
+                            "s", "t", "u", "v", "w", "x", "y", "z",
+                            # -----------------------------------------
+                            "0", "1", "2", "3", "4", "5", "6", "7", "8",
+                            "9"]
 
             x = 0
 
@@ -165,11 +205,17 @@ class CryptFile:
                 _txt = _txt.replace(replaced_chars[x], f"{replaced_chars[x]}{self.key}")
                 x += 1
 
+            if self.verbose:
+                print("[i] Started using the key replacement on the locally stored data.")
+
             x = 0
 
             for i in replaced_chars:
                 _txt = _txt.replace(f"{replaced_chars[x]}{self.key}", replacements[x])
                 x += 1
+
+            if self.verbose:
+                print("[i] Started actually swapping the characters.")
 
             x = 0
 
@@ -177,7 +223,14 @@ class CryptFile:
             f.close()
             f = open(self.new_file, "w", encoding=self.encoding)
             f.write(str(_txt))
+            
+            if self.verbose:
+                print(f"[i] Stored the data at {self.new_file}.{Fore.RESET}")
+                
             f.close()
+            
+            print(f"{Fore.BLUE}[i] Done.\n{Fore.RESET}")
+
 
         except (UnicodeDecodeError, UnicodeEncodeError, UnicodeError, UnicodeTranslateError):
             clear()
@@ -204,7 +257,7 @@ def github_repo():
     Website("https://github.com/MF366-Coding/d3NCRYP7")
 
 
-def start(_file, process, _new, _enc, _key, _mode, _github):
+def start(_file, process, _new, _enc, _key, _mode, _github, _verb, _json_path):
     """
     start starts the encryption/decryption UI
     """
@@ -223,7 +276,15 @@ def start(_file, process, _new, _enc, _key, _mode, _github):
     ]
     
     try:
-        if _new == None:
+        file_used = os.path.abspath(str(_file))
+        _file = file_used
+        
+        if _new != None:
+            new_used = _file.removesuffix(os.path.basename(_file))
+            new_usable = str(new_used + _new)
+            _new = new_usable
+            
+        elif _new == None:
             _new = _file
             
         if _enc == None:
@@ -231,7 +292,7 @@ def start(_file, process, _new, _enc, _key, _mode, _github):
         
         if _key == None:
             _key = DEFAULT_KEY
-            
+        
         if _mode == None:
             _mode = qwerty_mode
         
@@ -241,7 +302,23 @@ def start(_file, process, _new, _enc, _key, _mode, _github):
         elif _mode.lower() in start_on_f_modes:
             _mode = start_on_f
         
-        f = CryptFile(file_source=_file, new_file=_new, _encoding=_enc, key=_key)
+        else:
+            try:
+                if _json_path != None:
+                    custom_modef = open(_json_path, mode="r", encoding="utf-8")
+                    
+                    CUSTOM_MODES = json.load(custom_modef)
+                    mode_used = CUSTOM_MODES[_mode.lower()]
+                    
+                    _mode = mode_used
+                
+                else:
+                    raise Exception
+            
+            except Exception:
+                _mode = qwerty_mode
+        
+        f = CryptFile(file_source=_file, new_file=_new, _encoding=_enc, key=_key, verbose=_verb)
         
         if process == True:
             f.encrypt(_mode)
@@ -251,7 +328,7 @@ def start(_file, process, _new, _enc, _key, _mode, _github):
             
         if _github == True:
             github_repo()
-            
+    
     except Exception:
         clear()
         print(f"{Back.RED}An unknown error was raised.{Back.RESET}")
@@ -260,14 +337,37 @@ def start(_file, process, _new, _enc, _key, _mode, _github):
     
 parser = argparse.ArgumentParser(description="d3NCRYP7")
 
-parser.add_argument("filepath", type=str, help="The filepath of the file you'd like to encrypt/decrypt.")
-parser.add_argument("-e", "--encrypt", action="store_true", help="If used, this flag will change the process from decryption to encryption.")
-parser.add_argument("--new_filename", "-nf", type=str, help="The name of the new file that will result from the encryption/decryption. If not specified, the process will overwrite the existing file.")
-parser.add_argument("--encoding", type=str, help="The encoding used to decode the files. If not specified, the encoding will be utf-8 for its large support for many characters.")
-parser.add_argument("--key", "-k", type=str, help="The encryption/decryption key used. If not specified, the regular and recommended one will be used.")
-parser.add_argument("--mode", "-m", type=str, help="Encryption/decryption mode. See GitHub for all modes available. If not specified, the most basic mode (QWERTY Mode) will be used.")
-parser.add_argument("--github", action="store_true", help="If specified, the program will take you to its GitHub repo.")
+parser.add_argument("filepath", 
+                    type=str, help="The filepath of the file you'd like to encrypt/decrypt.")
 
-args = parser.parse_args()
+parser.add_argument("--encrypt", "-e",
+                    action="store_true", help="If used, this flag will change the process from decryption to encryption.")
 
-start(args.filepath, args.encrypt, args.new_filename, args.encoding, args.key, args.mode, args.github)
+parser.add_argument("--output-name", "--output", "-o",
+                    type=str, help="The name of the new file that will result from the encryption/decryption. If not specified, the process will overwrite the existing file.")
+
+parser.add_argument("--verbose", "-v",
+                    action="store_true", help="If used, more information about what is happening will be given.")
+
+parser.add_argument("--json-load", "-j",
+                    type=str, help="If you have a JSON file where you saved custom encryption/decryption modes, make sure to indicate the path to that file using this flag. It's also a good idea to use this flag together with the --mode flag.")
+
+parser.add_argument("--encoding",
+                    type=str, help="The encoding used to decode the files. If not specified, the encoding will be utf-8 for its large support for many characters.")
+
+parser.add_argument("--key", "-k",
+                    type=str, help="The encryption/decryption key used. If not specified, the regular and recommended one will be used.")
+
+parser.add_argument("--mode", "-m",
+                    type=str, help="Encryption/decryption mode. See GitHub for all modes available. If not specified, the most basic mode (QWERTY Mode) will be used.")
+
+parser.add_argument("--github",
+                    action="store_true", help="If specified, the program will take you to its GitHub repo.")
+
+try:
+    args = parser.parse_args()
+    start(args.filepath, args.encrypt, args.output_name, args.encoding, args.key, args.mode, args.github, args.verbose, args.json_load)
+    
+except:
+    print(f"\n{Back.RED}An error ocurred while attempting to read the given arguments.{Back.RESET}\n{Fore.GREEN}- Please consider using the --help or -h flag if you need help.\n- Please use double quotes in the start and end of the path you inserted in case it conatins spaces\n- If you still need help, please consider visiting GitHub\n{Fore.RESET}")
+    quit()

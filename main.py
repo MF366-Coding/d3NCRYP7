@@ -8,6 +8,7 @@ from colorama import Fore, Back, Style # Used for colored text
 import os
 import json
 import requests
+from datetime import datetime
 import argparse
 from simple_webbrowser.simple_webbrowser import Website
 import sys
@@ -16,7 +17,17 @@ script_path = os.path.abspath(__file__)
 script_dir = os.path.dirname(script_path)
 script_name = os.path.basename(script_path)
 
-VERSION = "1.0.0"
+VERSION = str("1.0.0")
+
+LATEST_STABLE = False
+
+try:
+    gh_data = requests.get("https://api.github.com/repos/MF366-Coding/d3NCRYP7/releases/latest", timeout=3.5)
+    data = json.loads(gh_data.text)
+    LATEST_STABLE = data['tag_name']
+    
+except Exception:
+    LATEST_STABLE = False
 
 LOGO_PNG = os.path.join(script_dir, "assets/logo.png")
 ICON = os.path.join(script_dir, "assets/logo.ico")
@@ -66,9 +77,13 @@ def newline():
     print("\n")
 
 clear()
-print(f"{Back.YELLOW}{Style.BRIGHT}Welcome to d3NCRYP7 and thanks for using it!{Style.RESET_ALL}{Back.RESET}{Fore.YELLOW} :){Fore.RESET}")
+print(f"{Back.YELLOW}{Fore.BLACK}{Style.BRIGHT}Welcome to d3NCRYP7 version {VERSION} and thanks for using it!{Fore.RESET}{Style.RESET_ALL}{Back.RESET}{Fore.YELLOW} :){Fore.RESET}")
 print(f"{Fore.CYAN}Made by MF366 with {Fore.RED}love <3{Fore.CYAN}!{Fore.RESET}")
 newline()
+
+if LATEST_STABLE != VERSION:
+    print(f"{Fore.YELLOW}[!] Aplication Version Warning\nYou are either:\n- using an older release of d3NCRYP7 (an update is recommended)\n- using an unstable release of d3NCRYP7\n- offline (with no internet connection) and d3NCRYP7 couldn't reach out to GitHub API\nAnother option is that the connection to GitHub API has timed out.{Fore.RESET}")
+    newline()
 
 class CryptFile:
     def __init__(self, file_source: str, new_file: str, _encoding: str = "utf-8", key: str = DEFAULT_KEY, verbose: bool = False):
@@ -92,7 +107,7 @@ class CryptFile:
             
         except Exception:
             clear()
-            print(f"{Back.RED}An unknown error was raised.{Back.RESET}")
+            print(f"{Fore.RED}[X] An unknown error was raised.{Fore.RESET}")
             quit()
 
     def encrypt(self, replacements: list):
@@ -155,22 +170,22 @@ class CryptFile:
 
         except (UnicodeDecodeError, UnicodeEncodeError, UnicodeError, UnicodeTranslateError):
             clear()
-            print(f"{Back.RED}An encoding error was found while attempting to read the file at {self.file_source}.{Back.RESET}")
+            print(f"{Fore.RED}[X] An encoding error was found while attempting to read the file at {self.file_source}.{Fore.RESET}")
             quit()
 
         except FileNotFoundError:
             clear()
-            print(f"{Back.RED}The path {self.file_source} is invalid - File Not Found.{Back.RESET}")
+            print(f"{Fore.RED}[X] The path {self.file_source} is invalid - File Not Found.{Fore.RESET}")
             quit()
 
         except PermissionError:
             clear()
-            print(f"{Back.RED}Missing permissions for {self.file_source}.{Back.RESET}")
+            print(f"{Fore.RED}[X] Missing permissions for {self.file_source}.{Fore.RESET}")
             quit()
 
         except Exception:
             clear()
-            print(f"{Back.RED}An unknown error was raised.{Back.RESET}")
+            print(f"{Fore.RED}[X] An unknown error was raised.{Fore.RESET}")
             quit()
 
     def decrypt(self, replaced_chars: list):
@@ -234,22 +249,22 @@ class CryptFile:
 
         except (UnicodeDecodeError, UnicodeEncodeError, UnicodeError, UnicodeTranslateError):
             clear()
-            print(f"{Back.RED}An encoding error was found while attempting to read the file at {self.file_source}.{Back.RESET}")
+            print(f"{Fore.RED}[X] An encoding error was found while attempting to read the file at {self.file_source}.{Fore.RESET}")
             quit()
 
         except FileNotFoundError:
             clear()
-            print(f"{Back.RED}The path {self.file_source} is invalid - File Not Found.{Back.RESET}")
+            print(f"{Fore.RED}[X] The path {self.file_source} is invalid - File Not Found.{Fore.RESET}")
             quit()
 
         except PermissionError:
             clear()
-            print(f"{Back.RED}Missing permissions for {self.file_source}.{Back.RESET}")
+            print(f"{Fore.RED}[X] Missing permissions for {self.file_source}.{Fore.RESET}")
             quit()
             
         except Exception:
             clear()
-            print(f"{Back.RED}An unknown error was raised.{Back.RESET}")
+            print(f"{Fore.RED}[X] An unknown error was raised.{Fore.RESET}")
             quit()
 
 
@@ -257,7 +272,7 @@ def github_repo():
     Website("https://github.com/MF366-Coding/d3NCRYP7")
 
 
-def start(_file, process, _new, _enc, _key, _mode, _github, _verb, _json_path):
+def start(_file, process, _new, _enc, _key, _mode, _github, _verb, _json_path, _config_save, *exceptions):
     """
     start starts the encryption/decryption UI
     """
@@ -279,8 +294,9 @@ def start(_file, process, _new, _enc, _key, _mode, _github, _verb, _json_path):
         file_used = os.path.abspath(str(_file))
         _file = file_used
         
+        new_used = _file.removesuffix(os.path.basename(_file))
+        
         if _new != None:
-            new_used = _file.removesuffix(os.path.basename(_file))
             new_usable = str(new_used + _new)
             _new = new_usable
             
@@ -293,6 +309,9 @@ def start(_file, process, _new, _enc, _key, _mode, _github, _verb, _json_path):
         if _key == None:
             _key = DEFAULT_KEY
         
+        mode_data = "default (if source code hasn't been edited)"
+        mode_name = "QWERTY Mode"
+        
         if _mode == None:
             _mode = qwerty_mode
         
@@ -301,6 +320,7 @@ def start(_file, process, _new, _enc, _key, _mode, _github, _verb, _json_path):
             
         elif _mode.lower() in start_on_f_modes:
             _mode = start_on_f
+            mode_name = "Starts on F"
         
         else:
             try:
@@ -310,9 +330,13 @@ def start(_file, process, _new, _enc, _key, _mode, _github, _verb, _json_path):
                     CUSTOM_MODES = json.load(custom_modef)
                     mode_used = CUSTOM_MODES[_mode.lower()]
                     
+                    mode_name = _mode.lower()
                     _mode = mode_used
+                                        
+                    mode_data = 'custom'
                 
                 else:
+                    _json_path = 'none'
                     raise Exception
             
             except Exception:
@@ -320,18 +344,42 @@ def start(_file, process, _new, _enc, _key, _mode, _github, _verb, _json_path):
         
         f = CryptFile(file_source=_file, new_file=_new, _encoding=_enc, key=_key, verbose=_verb)
         
+        _process = "Decryption"
+        
         if process == True:
             f.encrypt(_mode)
+            _process = "Encryption"
         
         elif process == False:
             f.decrypt(_mode)
-            
+            _process = "Decryption"
+        
+        if _config_save != None:
+            file = open(f"{new_used}{str(_config_save)}.d3NCRYP7.config-file", mode="w", encoding="utf-8")
+            file.write(f"""d3NCRYP7 config file saved at {str(datetime.now())}
+--------------------------------------------------------------------
+File: {_file}
+Filename given to the output file: {_new}
+Directory where the original file was: {new_used}
+Encoding: {_enc}
+Process: {_process}
+Key: {str(_key)}
+Mode name: {mode_name}
+Mode: {mode_data}
+Path to the custom JSON file used (if 'none' then there was no custom JSON): {_json_path}
+Mode definition/table (at the time of encryption/decryption): {_mode}
+--------------------------------------------------------------------
+Recommended actions:
+- Save this file near the one you encrypted/decrypted or the original one
+- Compare your configurations to the default ones at GitHub                   
+""")
+         
         if _github == True:
             github_repo()
     
     except Exception:
         clear()
-        print(f"{Back.RED}An unknown error was raised.{Back.RESET}")
+        print(f"{Fore.RED}[X] An unknown error was raised.{Fore.RESET}")
         quit()
         
     
@@ -361,13 +409,16 @@ parser.add_argument("--key", "-k",
 parser.add_argument("--mode", "-m",
                     type=str, help="Encryption/decryption mode. See GitHub for all modes available. If not specified, the most basic mode (QWERTY Mode) will be used.")
 
+parser.add_argument("--save-configs", "-s",
+                    type=str, help="If specified, a config file with the arguments used will be saved under the name you selected.\nNOTE: This is only the basename! Please don't isnert an extension or a file path.")
+
 parser.add_argument("--github",
                     action="store_true", help="If specified, the program will take you to its GitHub repo.")
 
 try:
     args = parser.parse_args()
-    start(args.filepath, args.encrypt, args.output_name, args.encoding, args.key, args.mode, args.github, args.verbose, args.json_load)
+    start(args.filepath, args.encrypt, args.output_name, args.encoding, args.key, args.mode, args.github, args.verbose, args.json_load, args.save_configs)
     
 except:
-    print(f"\n{Back.RED}An error ocurred while attempting to read the given arguments.{Back.RESET}\n{Fore.GREEN}- Please consider using the --help or -h flag if you need help.\n- Please use double quotes in the start and end of the path you inserted in case it conatins spaces\n- If you still need help, please consider visiting GitHub\n{Fore.RESET}")
+    print(f"\n{Fore.BLUE}[i] Information and tips about the given arguments.{Fore.RESET}\n{Fore.GREEN}- Please consider using the '--help' or '-h' flag if you need help.\n- Please use double quotes in the start and end of the path you inserted in case it conatins spaces\n- If you still need help, please consider visiting GitHub\n{Fore.RESET}")
     quit()

@@ -1,7 +1,0 @@
-random text1
-
-It should be replaced with:
-rzndom text1
-
-Also:
-zzzzzzzz should be aaaaaaaaa or something like that

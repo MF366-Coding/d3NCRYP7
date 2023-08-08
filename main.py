@@ -29,8 +29,10 @@ try:
 except Exception:
     LATEST_STABLE = False
 
+'''
 LOGO_PNG = os.path.join(script_dir, "assets/logo.png")
 ICON = os.path.join(script_dir, "assets/logo.ico")
+'''
 
 qwerty_mode = [
     "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G",

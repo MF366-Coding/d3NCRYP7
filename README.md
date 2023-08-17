@@ -1,6 +1,8 @@
 # d3NCRYP7 - Simple Encryption and Decryption System
 Made in Python with ❤ by MF366
 
+![d3NCRYP7's Logo, by me, MF366](/assets/logo.png?raw=true "d3NCRYP7's Logo")
+
 Not the best encryption/decryption system but one that is already pretty good for most purposes. Specially, because it's free and open source.
 
 ## Modes

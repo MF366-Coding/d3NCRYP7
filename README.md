@@ -14,7 +14,7 @@ Current modes and their names:
 
 ## ToDo
 What I **need** to and **gonna** add:
-- An option that **saves the configurations** used to a txt file
+- An option that **inverts** the text while encrypting/decrypting it
 
 What I am still thinking about adding or not (a bit more in favor of 'not' but...):
 - An extra script that **loads an actual GUI** for easier acess from the user

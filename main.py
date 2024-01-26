@@ -10,7 +10,7 @@ import json
 import requests
 from datetime import datetime
 import argparse
-from simple_webbrowser.simple_webbrowser import Website
+from simple_webbrowser import Website
 import sys
 
 script_path = os.path.abspath(__file__)
